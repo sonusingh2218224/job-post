@@ -1,10 +1,9 @@
 "use client";
 
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "react-toastify";
-import { useState } from "react";
 import FormInput from "./FormInput";
 import FormSelect from "./FormSelect";
 import {
@@ -16,6 +15,7 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
+import { RegisterPayload, LoginPayload } from "@/services/authService";
 
 type Mode = "login" | "register";
 
@@ -25,7 +25,6 @@ interface AuthFormProps {
 
 const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
   const { login, register, loading } = useAuth();
-  const [successMessage, setSuccessMessage] = useState("");
 
   const initialValues =
     mode === "login"
@@ -66,18 +65,23 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
           ),
         });
 
-  const handleSubmit = async (values: any, { resetForm }: any) => {
+  const handleSubmit = async (
+    values: RegisterPayload | LoginPayload,
+    { resetForm }: { resetForm: () => void }
+  ) => {
     try {
       if (mode === "login") {
-        await login(values);
+        await login(values as LoginPayload);
         toast.success("Welcome back 👋");
       } else {
-        await register(values);
+        await register(values as RegisterPayload);
         resetForm();
-        setSuccessMessage("Account created successfully!");
       }
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Something went wrong");
+    } catch (err: unknown) {
+      const errorMessage =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Something went wrong";
+      toast.error(errorMessage);
     }
   };
 
@@ -191,7 +195,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                 </>
               ) : (
                 <>
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <Link href="/" className="text-[#5937B7] pl-1">
                     Register
                   </Link>

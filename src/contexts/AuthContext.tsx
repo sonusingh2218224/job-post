@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         ) {
           router.push("/dashboard");
         }
-      } catch (error) {
+      } catch {
         // If userData is corrupted, clear it
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
@@ -120,8 +120,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         router.push("/dashboard");
       }
-    } catch (error: any) {
-      toast.error(error?.response?.data?.email[0]);
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { email?: string[] } } })?.response
+          ?.data?.email?.[0] || "Registration failed";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -134,7 +137,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("refresh");
     localStorage.removeItem("user");
 
-    // After logout, redirect to login
     router.push("/login");
   };
 

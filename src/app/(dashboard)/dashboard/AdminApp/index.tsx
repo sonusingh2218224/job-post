@@ -47,14 +47,14 @@ function AdminApp({ children }: AdminAppProps) {
             >
               <Menu className="w-6 h-6" />
             </button>
-            <div className="pl-10 flex items-center gap-4">
+            <div className="flex items-center gap-4">
               <Image
-                height={100}
-                width={100}
+                height={40}
+                width={150}
                 src="/assets/HireCoop.svg"
-                alt=""
+                alt="HireCoop Logo"
               />
-              <span className="pl-18 text-sm text-gray-600 hidden sm:block">
+              <span className="pl-10 ext-sm text-gray-600 hidden sm:block">
                 Welcome, {user.first_name} {user.last_name}
               </span>
             </div>
@@ -75,7 +75,7 @@ function AdminApp({ children }: AdminAppProps) {
         <Sidebar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
 
         {/* Main content */}
-        <main className="flex-1 p-4 md:ml-70 pt-26 overflow-y-auto h-screen">
+        <main className="flex-1 p-4 md:ml-64 pt-24 overflow-y-auto h-screen">
           {children}
         </main>
       </div>
