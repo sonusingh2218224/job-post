@@ -21,19 +21,37 @@ export interface JobPayload {
   application_deadline: string; // ISO date string
   hiring_manager_id: string;
 }
+  const userStr = localStorage.getItem("organization_id"); // or however you're storing it
 
 export const createJob = async (data: JobPayload) => {
-  const res = await api.post("/jobs/", data);
+
+  const res = await api.post("/jobs/", data, {
+    headers: {
+      "X-Organization-ID": userStr,
+    },
+  });
+
   return res.data;
 };
 
-export const getJobs = async () => {
-  const res = await api.get("/jobs/");
+
+export const getJobs = async (limit:string) => {
+const res = await api.get(`/jobs/?limit=100`, {
+  headers: {
+    "X-Organization-ID": userStr,
+  },
+});
+
+  
   return res.data;
 };
 
 export const getJobById = async (id: string) => {
-  const res = await api.get(`/jobs/${id}/`);
+  const res = await api.get(`/jobs/${id}/`,{
+     headers: {
+    "X-Organization-ID": userStr,
+  },
+  });
   return res.data;
 };
 
@@ -43,6 +61,10 @@ export const updateJob = async (id: string, data: Partial<JobPayload>) => {
 };
 
 export const deleteJob = async (id: string) => {
-  const res = await api.delete(`/jobs/${id}/`);
+  const res = await api.delete(`/jobs/${id}/`,{
+      headers: {
+    "X-Organization-ID": userStr,
+  },
+  });
   return res.data;
 };

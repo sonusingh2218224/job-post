@@ -84,11 +84,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       const res = await loginUser(payload);
+      console.log(res,"======")
       setAccessToken(res.access);
       setUser(res.user);
       localStorage.setItem("access", res.access);
       localStorage.setItem("refresh", res.refresh);
       localStorage.setItem("user", JSON.stringify(res.user));
+      localStorage.setItem("organization_id",res.organization_id)
       router.push("/dashboard");
     } finally {
       setLoading(false);
@@ -170,3 +172,4 @@ export const useAuth = () => {
   if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };
+

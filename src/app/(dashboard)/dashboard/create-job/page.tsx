@@ -8,6 +8,8 @@ import * as Yup from "yup"
 import { CustomSelect } from "@/app/components/CustomSelect"
 import SkillInput from "@/app/components/SkillsInput"
 import { useJobContext } from "@/contexts/JobContext"
+import { toast } from "react-toastify"
+import { ArrowLeft, ArrowRight } from "lucide-react"
 
 // ----- Types -----
 export type CreateJobPayload = {
@@ -33,7 +35,7 @@ export type CreateJobPayload = {
 }
 const userStr = localStorage.getItem("user");
 const user = userStr ? JSON.parse(userStr) : null;
-
+console.log(user)
 // ----- Initial Values (example defaults taken from your payload) -----
 const initialValues: CreateJobPayload = {
   job_title: "",
@@ -208,12 +210,7 @@ const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
     className="mt-1 w-full rounded-md  p-2 border-1 border-[#D0D5DD] focus:border-[#5937B7] focus:ring-[#5937B7]"
   />
 )
-const Select = (props: React.SelectHTMLAttributes<HTMLSelectElement>) => (
-  <select
-    {...props}
-    className="mt-1 w-full rounded-md  p-3 border-1 border-[#D0D5DD] focus:border-[#5937B7] focus:ring-[#5937B7]"
-  />
-)
+
 const TextArea = (props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => (
   <textarea
     {...props}
@@ -229,7 +226,7 @@ const ErrorText = ({ name }: { name: keyof CreateJobPayload | string }) => (
 export default function CreateJobPage() {
   const [current, setCurrent] = useState<UI_StepKey>("job")
   const [completedSteps, setCompletedSteps] = useState<Set<UI_StepKey>>(new Set())
-  const { addJob } = useJobContext();
+  const { addJob,loading } = useJobContext();
 
   const goNext = () => {
     const order: UI_StepKey[] = ["job", "jobSkills", "publishing", "success"]
@@ -262,12 +259,22 @@ export default function CreateJobPage() {
       no_of_technical_rounds: values.no_of_technical_rounds === "" ? 0 : Number(values.no_of_technical_rounds),
     }
 
-        const created = await addJob(payload);
-         console.log(created)
+       try {
+    const created:any = await addJob(payload) // your API call
 
-    console.log("Final Payload:", payload)
+    if (created?.success) {
+      toast.success(created?.message || "Job created successfully!")
+         console.log("Final Payload:", payload)
     helpers.setSubmitting(false)
     setCurrent("success")
+    } else {
+      toast.error(created?.message || "Failed to create job")
+    }
+  } catch (error: any) {
+    toast.error(error?.message || "Something went wrong while creating job")
+  }
+
+ 
   }
 
 
@@ -295,44 +302,68 @@ export default function CreateJobPage() {
   }
 
 
-  const renderActions = (submit?: boolean, validateAndNext?: () => void, formikProps?: any) => (
-    <div className="flex justify-between pt-4">
-      <div className="flex gap-2">
-        <button type="button" onClick={goBack} className="px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100">
-          Back
-        </button>
+const renderActions = (
+  submit?: boolean,
+  validateAndNext?: () => void,
+  formikProps?: any
+) => (
+  <div className="flex items-center justify-between gap-2 pt-4">
+    {/* Left side (Previous button) */}
+    <button
+      type="button"
+      onClick={goBack}
+      className="px-4 py-2 text-[10px] md:text-[16px] flex items-center gap-2 rounded-md border border-[#5937B7] text-[#5937B7] hover:bg-gray-50"
+    >
+      <ArrowLeft size={18} /> Previous
+    </button>
+
+    {/* Right side */}
+    {submit ? (
+      <button
+        type="submit"
+        disabled={loading}
+        className={`px-4 py-2 rounded-md flex items-center justify-center bg-[#5937B7] text-white hover:bg-[#4b2fa0] ${
+          loading ? "opacity-70 cursor-not-allowed" : ""
+        }`}
+      >
+        {loading && (
+          <span className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
+        )}
+        {loading ? "Submitting..." : "Submit"}
+      </button>
+    ) : (
+      <div className="flex gap-2 items-center">
         <button
           type="button"
-          onClick={() => formikProps && onSaveAsDraft(formikProps.values, formikProps)}
-          className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+          onClick={() =>
+            formikProps && onSaveAsDraft(formikProps.values, formikProps)
+          }
+          className="px-4 py-2 text-[10px] md:text-[16px] rounded-md border border-[#5937B7] text-[#5937B7] hover:bg-gray-50"
         >
           Save as Draft
         </button>
-      </div>
-      {submit ? (
-        <button type="submit" className="px-4 py-2 rounded-md bg-[#5937B7] text-white hover:bg-[#4b2fa0]">
-          Submit
-        </button>
-      ) : (
+
         <button
           type="button"
           onClick={validateAndNext}
-          className="px-4 py-2 rounded-md bg-[#5937B7] text-white hover:bg-[#4b2fa0]"
+          className="px-4 py-2 flex text-[10px] md:text-[16px] items-center gap-3 rounded-md bg-[#5937B7] text-white hover:bg-[#4b2fa0]"
         >
-          Continue
+          Continue <ArrowRight size={18} />
         </button>
-      )}
-    </div>
-  )
+      </div>
+    )}
+  </div>
+)
+
 
   return (
     <div className="space-y-6">
       <div className="bg-white shadow rounded-lg">
         <div className="px-6 py-4 ">
           <h2 className="text-lg font-semibold text-gray-900">Post a job</h2>
-          <p className="text-sm text-gray-500">Fill the form to create a job posting.</p>
+          <p className="text-sm text-gray-500">Welcome to Your Job Creation Page – Post and Manage Opportunities Easily.</p>
         </div>
-        <div className="px-6 py-4">
+        <div className="px-6 py-4 md:w-[80%] mx-auto">
           <StepIndicator current={current} completedSteps={completedSteps} />
         </div>
       </div>
@@ -452,12 +483,41 @@ export default function CreateJobPage() {
                     <div className="grid md:grid-cols-3 gap-4">
                       <div>
                         <Label>Salary Min</Label>
-                        <Field name="salary_min" as={Input} placeholder="e.g. 50000" />
+                        <Field name="salary_min">
+  {({ field, form }: any) => (
+    <CustomSelect
+      name={field.name}
+      value={field.value}
+      onChange={(val) => form.setFieldValue(field.name, val)}
+      options={[
+        { value: "0-20000", label: "Up to $20,000 (2)" },
+        { value: "20000-40000", label: "$20,000 - $40,000 (2)" },
+        { value: "40000-75000", label: "$40,000 - $75,000 (7)" },
+      ]}
+      placeholder="Select salary Min"
+    />
+  )}
+</Field>
+
                         <ErrorText name="salary_min" />
                       </div>
                       <div>
                         <Label>Salary Max</Label>
-                        <Field name="salary_max" as={Input} placeholder="e.g. 80000" />
+                         <Field name="salary_max">
+  {({ field, form }: any) => (
+    <CustomSelect
+      name={field.name}
+      value={field.value}
+      onChange={(val) => form.setFieldValue(field.name, val)}
+      options={[
+        { value: "0-20000", label: "Up to $20,000 (2)" },
+        { value: "20000-40000", label: "$20,000 - $40,000 (2)" },
+        { value: "40000-75000", label: "$40,000 - $75,000 (7)" },
+      ]}
+      placeholder="Select salary Max"
+    />
+  )}
+</Field>
                         <ErrorText name="salary_max" />
                       </div>
                       <div>

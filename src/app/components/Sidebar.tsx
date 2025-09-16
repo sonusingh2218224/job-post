@@ -22,7 +22,7 @@ function Sidebar({
       href: "/dashboard",
       active: true,
     },
-    { name: "Jobs", icon: Briefcase, href: "/jobs" },
+    { name: "Jobs", icon: Briefcase, href: "/dashboard/jobs" },
     { name: "Create Job", icon: Plus, href: "/dashboard/create-job" },
     { name: "Candidates", icon: Users, href: "/candidates" },
     { name: "AI Interview", icon: MessageSquare, href: "/ai-interview" },
