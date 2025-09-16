@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { MapPin, DollarSign, Users, Calendar, Loader2, Trash } from "lucide-react";
+import { MapPin, DollarSign, Loader2, Trash } from "lucide-react";
 import { useJobContext } from "@/contexts/JobContext";
 import Link from "next/link";
+import Image from "next/image";
 import { toast } from "react-toastify";
 
 type Job = {
@@ -26,8 +27,8 @@ type Job = {
 };
 
 function Page() {
-    const { fetchJobs, loading, jobs, pagination, removeJob }: any = useJobContext();
-    const [currentPage, setCurrentPage] = useState(1);
+    const { fetchJobs, loading, jobs, removeJob } = useJobContext();
+    const [currentPage] = useState(1);
 
     const [deleting, setDeleting] = useState(false);
 
@@ -47,17 +48,10 @@ function Page() {
     };
 
     useEffect(() => {
-        fetchJobs(currentPage);
-    }, []);
+        fetchJobs();
+    }, [currentPage, fetchJobs]);
 
-    // Load more handler
-    const loadMore = async () => {
-        const nextPage = currentPage + 1;
-        if (pagination && nextPage <= pagination.total_pages) {
-            await fetchJobs(nextPage, 10, true);
-            setCurrentPage(nextPage);
-        }
-    };
+ 
 
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
@@ -68,7 +62,7 @@ function Page() {
     <Loader2 color="#5937B7" className="mx-auto my-8 h-10 w-10 animate-spin" />
   ) : jobs.length > 0 ? (
     <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-      {jobs.map((job: Job) => (
+      {jobs.map((job:any) => (
         <article
           key={job.job_id}
           className="rounded-2xl shadow-md p-5 bg-white border border-gray-100 flex flex-col"
@@ -127,10 +121,12 @@ function Page() {
   ) : (
     // No Jobs Found Centered
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
-      <img
+      <Image
         src="/assets/job.jpg" // replace with your image path
         alt="No Jobs Found"
-        className="w-64 h-64 mb-6 object-contain"
+        width={256}
+        height={256}
+        className="mb-6 object-contain"
       />
       <h2 className="text-2xl font-semibold mb-2 text-gray-700">No Jobs Found</h2>
       <p className="text-gray-500 mb-4">

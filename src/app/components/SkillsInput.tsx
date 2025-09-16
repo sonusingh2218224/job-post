@@ -3,15 +3,15 @@ import { X } from "lucide-react";
 import { useState } from "react";
 
 function SkillInput({
-  name,
   values,
   onAdd,
   onRemove,
+  name
 }: {
-  name: string;
   values: string[];
   onAdd: (val: string) => void;
   onRemove: (index: number) => void;
+  name:any
 }) {
   const [inputValue, setInputValue] = useState("");
 

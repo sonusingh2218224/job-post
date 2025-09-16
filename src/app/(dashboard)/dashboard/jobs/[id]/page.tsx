@@ -1,52 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useJobContext } from "@/contexts/JobContext";
+import { useJobContext, Job } from "@/contexts/JobContext";
 import { useParams, useRouter } from "next/navigation";
 import { MapPin, DollarSign, Users, Calendar, User, ClipboardList, ArrowLeft } from "lucide-react";
-
-type Job = {
-  job_id: string;
-  job_title: string;
-  job_type: string;
-  work_mode: string;
-  department: string;
-  location: string;
-  experience_level: string;
-  no_of_openings: number;
-  no_of_technical_rounds: number;
-  preferred_skills: string[];
-  required_skills: string[];
-  salary: {
-    min: number;
-    max: number;
-    currency: string;
-    type: string;
-  };
-  status: string;
-  created_at: string;
-  application_deadline?: string | null;
-  job_description: string;
-  interview_process: string;
-  hiring_manager: {
-    id: string;
-    name: string;
-    email: string;
-  };
-  custom_form: {
-    id: string;
-    name: string;
-    organization_id: string;
-    created_by_id: string;
-    created_at: string;
-  };
-  analytics: {
-    total_views: number;
-    total_applications: number;
-    applications_this_week: number;
-  };
-  published_at?: string | null;
-};
 
 const JobPage: React.FC = () => {
   const { id } = useParams() as { id: string };
@@ -58,8 +15,8 @@ const JobPage: React.FC = () => {
     if (!id) return;
     const fetchData = async () => {
       try {
-        const result:any = await fetchJobById(id);
-        setJob(result.data);
+        const result = await fetchJobById(id);
+        setJob(result);
       } catch (err) {
         console.error("Error fetching job:", err);
       }
@@ -95,16 +52,16 @@ const JobPage: React.FC = () => {
           <MapPin className="w-4 h-4" /> {job.location}
         </div>
         <div className="flex items-center gap-2">
-          <DollarSign className="w-4 h-4" /> {job.salary.currency} {job.salary.min.toLocaleString()} - {job.salary.currency} {job.salary.max.toLocaleString()} {job.salary.type === "monthly" ? "/mo" : "/yr"}
+          <DollarSign className="w-4 h-4" /> {job.salary_currency} {job.salary_min?.toLocaleString()} - {job.salary_currency} {job.salary_max?.toLocaleString()} {job.salary_type === "monthly" ? "/mo" : "/yr"}
         </div>
         <div className="flex items-center gap-2">
           <Users className="w-4 h-4" /> {job.no_of_openings} openings
         </div>
         <div className="flex items-center gap-2">
-          <User className="w-4 h-4" /> Hiring Manager: {job.hiring_manager.name} ({job.hiring_manager.email})
+          <User className="w-4 h-4" /> Hiring Manager ID: {job.hiring_manager_id}
         </div>
         <div className="flex items-center gap-2">
-          <Calendar className="w-4 h-4" /> Created At: {new Date(job.created_at).toLocaleDateString()}
+          <Calendar className="w-4 h-4" /> Created At: {job.created_at ? new Date(job.created_at).toLocaleDateString() : "N/A"}
         </div>
         <div className="flex items-center gap-2">
           <ClipboardList className="w-4 h-4" /> Technical Rounds: {job.no_of_technical_rounds}
@@ -128,21 +85,10 @@ const JobPage: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-1">Analytics</h2>
-        <p>Total Views: {job.analytics.total_views}</p>
-        <p>Total Applications: {job.analytics.total_applications}</p>
-        <p>Applications This Week: {job.analytics.applications_this_week}</p>
-      </div>
-
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-1">Custom Form</h2>
-        <p>{job.custom_form.name}</p>
-      </div>
-
-      <div className="mb-4">
-        <p>Status: <strong>{job.status}</strong></p>
         <p>Application Deadline: {job.application_deadline || "N/A"}</p>
-        <p>Published At: {job.published_at || "N/A"}</p>
+        {job.stipend_amount && (
+          <p>Stipend Amount: {job.stipend_amount}</p>
+        )}
       </div>
     </div>
   );

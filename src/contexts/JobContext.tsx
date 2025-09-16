@@ -34,7 +34,12 @@ export interface Job {
     hiring_manager_id: string;
     created_at?: string;
     updated_at?: string;
-    pagination: any
+    pagination: {
+        total?: number;
+        page?: number;
+        limit?: number;
+        totalPages?: number;
+    }
 }
 
 interface JobContextType {
@@ -45,7 +50,12 @@ interface JobContextType {
     addJob: (data: JobPayload) => Promise<Job | null>;
     editJob: (id: string, data: Partial<JobPayload>) => Promise<Job | null>;
     removeJob: (id: string) => Promise<void>;
-    pagination: any
+    pagination: {
+        total?: number;
+        page?: number;
+        limit?: number;
+        totalPages?: number;
+    }
 }
 
 const JobContext = createContext<JobContextType | undefined>(undefined);
@@ -54,10 +64,10 @@ export const JobProvider = ({ children }: { children: ReactNode }) => {
     const [jobs, setJobs] = useState<Job[]>([]);
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({})
-    const fetchJobs = async (limit: string = "10") => {
+    const fetchJobs = async () => {
         setLoading(true);
         try {
-            const data = await getJobs(limit); // pass limit here
+            const data = await getJobs(); // pass limit here
 
             if (data?.success && data.data) {
                 setJobs(data.data.jobs);

@@ -2,9 +2,10 @@
 "use client"
 
 import type React from "react"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { Formik, Form, Field, ErrorMessage, type FormikHelpers, FieldArray } from "formik"
 import * as Yup from "yup"
+import Image from "next/image"
 import { CustomSelect } from "@/app/components/CustomSelect"
 import SkillInput from "@/app/components/SkillsInput"
 import { useJobContext } from "@/contexts/JobContext"
@@ -114,11 +115,7 @@ const validationStepPublish = Yup.object({
   hiring_manager_id: Yup.string().uuid("Must be a valid UUID").required("Hiring manager is required"),
 })
 
-const schemaByStep = {
-  job: validationStepJob,
-  jobSkills: validationStepReq,
-  publishing: validationStepPublish,
-} as const
+// 
 
 
 // ----- Steps -----
@@ -154,9 +151,9 @@ const fieldsByStep: Record<Exclude<UI_StepKey, "success">, (keyof CreateJobPaylo
 const StepIndicator = ({ current, completedSteps }: { current: UI_StepKey; completedSteps: Set<UI_StepKey> }) => {
   const visibleSteps = steps.filter((s) => s.key !== "success")
 
-  const indexByKey = useMemo(() => Object.fromEntries(visibleSteps.map((s, i) => [s.key, i])), [])
+  // const indexByKey = useMemo(() => Object.fromEntries(visibleSteps.map((s, i) => [s.key, i])), [])
 
-  const activeIndex = indexByKey[current] ?? visibleSteps.length
+  // const activeIndex = indexByKey[current] ?? visibleSteps.length
 
   const completedCount = Array.from(completedSteps).filter((step) => step !== "success").length
   const progressPercent = current === "success" ? 100 : (completedCount / visibleSteps.length) * 100
@@ -172,11 +169,11 @@ const StepIndicator = ({ current, completedSteps }: { current: UI_StepKey; compl
         </div>
       </div>
       <div className="relative flex items-center justify-between w-full z-10">
-        {visibleSteps.map((s, i) => {
+        {visibleSteps.map((s) => {
           const isCompleted = completedSteps.has(s.key)
-          const isActive = current === s.key
-          const shouldHighlight = isCompleted || isActive
-          let iconHightLight = isCompleted
+          // const isActive = current === s.key
+          // const shouldHighlight = isCompleted || isActive
+          const iconHightLight = isCompleted
           return (
             <div key={s.key}>
               <div className="flex items-center justify-center gap-2 mt-10">
@@ -188,7 +185,7 @@ const StepIndicator = ({ current, completedSteps }: { current: UI_StepKey; compl
                       : "#E3E3E3",
                   }}
                 >
-                  <img src={s.icon || "/placeholder.svg"} alt="" className="w-full h-full object-contain" />
+                  <Image src={s.icon || "/placeholder.svg"} alt="" width={32} height={32} className="w-full h-full object-contain" />
                 </div>
                 <span className="text-sm font-medium text-gray-700">{s.label}</span>
               </div>

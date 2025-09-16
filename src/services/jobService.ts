@@ -35,7 +35,7 @@ export const createJob = async (data: JobPayload) => {
 };
 
 
-export const getJobs = async (limit:string) => {
+export const getJobs = async () => {
 const res = await api.get(`/jobs/?limit=100`, {
   headers: {
     "X-Organization-ID": userStr,
