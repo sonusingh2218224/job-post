@@ -7,6 +7,7 @@ import {
   BarChart3,
   X,
 } from "lucide-react";
+import Link from "next/link";
 function Sidebar({
   mobileOpen,
   setMobileOpen,
@@ -22,7 +23,7 @@ function Sidebar({
       active: true,
     },
     { name: "Jobs", icon: Briefcase, href: "/jobs" },
-    { name: "Create Job", icon: Plus, href: "/create-job" },
+    { name: "Create Job", icon: Plus, href: "/dashboard/create-job" },
     { name: "Candidates", icon: Users, href: "/candidates" },
     { name: "AI Interview", icon: MessageSquare, href: "/ai-interview" },
     { name: "Analytics", icon: BarChart3, href: "/analytics" },
@@ -60,7 +61,7 @@ function Sidebar({
           {navigationItems.map((item) => {
             const Icon = item.icon;
             return (
-              <a
+              <Link
                 key={item.name}
                 href={item.href}
                 className={`flex items-center px-3 py-3 rounded-md text-white transition-colors duration-200 ${
@@ -74,7 +75,7 @@ function Sidebar({
                 }}
               >
                 <Icon className="w-5 h-5 mr-3" /> {item.name}
-              </a>
+              </Link>
             );
           })}
         </nav>
