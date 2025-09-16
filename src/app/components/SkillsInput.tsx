@@ -11,7 +11,7 @@ function SkillInput({
   values: string[];
   onAdd: (val: string) => void;
   onRemove: (index: number) => void;
-  name:any
+  name: string;
 }) {
   const [inputValue, setInputValue] = useState("");
 

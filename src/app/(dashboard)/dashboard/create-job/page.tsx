@@ -44,8 +44,8 @@ const initialValues: CreateJobPayload = {
   work_mode: "",
   department: "",
   location: "",
-  salary_min: "",
-  salary_max: "",
+  salary_min: 0,
+  salary_max: 0,
   salary_currency: "",
   salary_type: "",
   stipend_amount: "",
@@ -76,9 +76,9 @@ const validationStepJob = Yup.object({
 })
 
 const validationStepReq = Yup.object({
-  salary_min: Yup.string()
+  salary_min: Yup.number()
     .required("Salary min is required"),
-  salary_max: Yup.string()
+  salary_max: Yup.number()
     .required("Salary max is required"),
   salary_currency: Yup.string().required("Currency is required"),
   salary_type: Yup.string().oneOf(["annual", "monthly", "hourly", "stipend"]).required("Salary type is required"),
@@ -482,11 +482,12 @@ const renderActions = (
       name={field.name}
       value={field.value}
       onChange={(val) => form.setFieldValue(field.name, val)}
-      options={[
-        { value: "0-20000", label: "Up to $20,000 (2)" },
-        { value: "20000-40000", label: "$20,000 - $40,000 (2)" },
-        { value: "40000-75000", label: "$40,000 - $75,000 (7)" },
-      ]}
+     options={[
+  { value: "20000", label: "Up to $20,000 (2)" },
+  { value: "40000", label: "$40,000 (2)" },
+  { value: "75000", label: "$75,000 (7)" },
+]}
+
       placeholder="Select salary Min"
     />
   )}
@@ -502,11 +503,11 @@ const renderActions = (
       name={field.name}
       value={field.value}
       onChange={(val) => form.setFieldValue(field.name, val)}
-      options={[
-        { value: "0-20000", label: "Up to $20,000 (2)" },
-        { value: "20000-40000", label: "$20,000 - $40,000 (2)" },
-        { value: "40000-75000", label: "$40,000 - $75,000 (7)" },
-      ]}
+       options={[
+  { value: "20000", label: "Up to $20,000 (2)" },
+  { value: "40000", label: "$40,000 (2)" },
+  { value: "75000", label: "$75,000 (7)" },
+]}
       placeholder="Select salary Max"
     />
   )}

@@ -88,8 +88,8 @@ function Page() {
             <div className="flex items-center gap-2">
               <DollarSign className="w-4 h-4" />
               <span>
-                {job?.salary.currency} {job?.salary.min} - {job.salary.currency}{" "}
-                {job.salary.max} {job?.salary.type === "monthly" ? "/mo" : "/yr"}
+                {job?.salary.currency} {job.salary.min} - {job.salary.currency}{" "}
+                {job.salary.max} {job.salary.type === "monthly" ? "/mo" : "/yr"}
               </span>
             </div>
           </div>
