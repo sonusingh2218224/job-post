@@ -63,18 +63,18 @@ function Page() {
     <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {jobs.map((job:any) => (
         <article
-          key={job.job_id}
+          key={job?.job_id}
           className="rounded-2xl shadow-md p-5 bg-white border border-gray-100 flex flex-col"
         >
           {/* Job Header */}
           <header className="flex items-start justify-between gap-4">
             <div>
-              <h3 className="text-lg font-semibold text-gray-800">{job.job_title}</h3>
-              <p className="text-sm text-gray-500 mt-1">{job.department}</p>
+              <h3 className="text-lg font-semibold text-gray-800">{job?.job_title}</h3>
+              <p className="text-sm text-gray-500 mt-1">{job?.department}</p>
             </div>
             <div className="text-right">
               <span className="inline-block px-3 py-1 rounded-full text-sm font-medium text-[#5937B7] bg-[#efe8ff] border border-[#e6dfff]">
-                {job.job_type.replace("_", " ")}
+                {job?.job_type}
               </span>
             </div>
           </header>
@@ -83,13 +83,13 @@ function Page() {
           <div className="mt-4 flex items-center gap-4 text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <MapPin className="w-4 h-4" />
-              <span>{job.location}</span>
+              <span>{job?.location}</span>
             </div>
             <div className="flex items-center gap-2">
               <DollarSign className="w-4 h-4" />
               <span>
-                {job.salary.currency} {job.salary.min.toLocaleString()} - {job.salary.currency}{" "}
-                {job.salary.max.toLocaleString()} {job.salary.type === "monthly" ? "/mo" : "/yr"}
+                {job?.salary.currency} {job?.salary.min} - {job.salary.currency}{" "}
+                {job.salary.max} {job?.salary.type === "monthly" ? "/mo" : "/yr"}
               </span>
             </div>
           </div>
@@ -97,7 +97,7 @@ function Page() {
           {/* Job Footer */}
           <div className="flex items-center justify-end gap-2 pt-4 mt-auto">
             <Link
-              href={`/dashboard/jobs/${job.job_id}`}
+              href={`/dashboard/jobs/${job?.job_id}`}
               className="px-3 py-1.5 rounded-lg text-sm font-medium border border-[#5937B7] text-white bg-[#5937B7] hover:opacity-95"
             >
               Details

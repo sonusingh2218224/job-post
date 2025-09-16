@@ -68,7 +68,6 @@ export const JobProvider = ({ children }: { children: ReactNode }) => {
         setLoading(true);
         try {
             const data = await getJobs(); // pass limit here
-
             if (data?.success && data.data) {
                 setJobs(data.data.jobs);
                 setPagination(data.data.pagination);

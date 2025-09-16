@@ -76,13 +76,9 @@ const validationStepJob = Yup.object({
 })
 
 const validationStepReq = Yup.object({
-  salary_min: Yup.number()
-    .typeError("Min salary must be a number")
-    .min(0, "Must be >= 0")
+  salary_min: Yup.string()
     .required("Salary min is required"),
-  salary_max: Yup.number()
-    .typeError("Max salary must be a number")
-    .min(Yup.ref("salary_min"), "Must be >= min")
+  salary_max: Yup.string()
     .required("Salary max is required"),
   salary_currency: Yup.string().required("Currency is required"),
   salary_type: Yup.string().oneOf(["annual", "monthly", "hourly", "stipend"]).required("Salary type is required"),
