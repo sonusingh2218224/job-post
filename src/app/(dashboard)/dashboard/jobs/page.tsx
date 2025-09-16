@@ -28,7 +28,6 @@ type Job = {
 
 function Page() {
     const { fetchJobs, loading, jobs, removeJob } = useJobContext();
-    const [currentPage] = useState(1);
 
     const [deleting, setDeleting] = useState(false);
 
@@ -49,7 +48,7 @@ function Page() {
 
     useEffect(() => {
         fetchJobs();
-    }, [currentPage, fetchJobs]);
+    }, []);
 
  
 
