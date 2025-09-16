@@ -84,7 +84,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       const res = await loginUser(payload);
-      console.log(res,"======")
       setAccessToken(res.access);
       setUser(res.user);
       localStorage.setItem("access", res.access);

@@ -36,7 +36,6 @@ export type CreateJobPayload = {
 }
 const userStr = localStorage.getItem("user");
 const user = userStr ? JSON.parse(userStr) : null;
-console.log(user)
 // ----- Initial Values (example defaults taken from your payload) -----
 const initialValues: CreateJobPayload = {
   job_title: "",
@@ -257,7 +256,6 @@ export default function CreateJobPage() {
 
     if (created?.success) {
       toast.success(created?.message || "Job created successfully!")
-         console.log("Final Payload:", payload)
     helpers.setSubmitting(false)
     setCurrent("success")
     } else {
@@ -289,7 +287,6 @@ export default function CreateJobPage() {
       status: "draft",
     }
 
-    console.log("Draft Payload:", payload)
     helpers.setSubmitting(false)
     alert("Job saved as draft!")
   }
